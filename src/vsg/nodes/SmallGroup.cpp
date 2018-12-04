@@ -24,15 +24,37 @@ SmallGroup::SmallGroup(size_type size) :
 {
 }
 
+SmallGroup::SmallGroup(Allocator* allocator, size_type size) :
+    Inherit(allocator),
+    _children(size)
+{
+}
+
 SmallGroup::~SmallGroup()
 {
+    if (Allocator* allocator = getAllocator(); allocator!=nullptr)
+    {
+        _children.clear(allocator);
+    }
+}
+
+void SmallGroup::resize(size_type size)
+{
+    if (Allocator* allocator = getAllocator(); allocator!=nullptr)
+    {
+        _children.resize(allocator, size);
+    }
+    else
+    {
+        _children.resize(size);
+    }
 }
 
 void SmallGroup::read(Input& input)
 {
     Node::read(input);
 
-    _children.resize(input.readValue<uint32_t>("NumChildren"));
+    resize(input.readValue<uint32_t>("NumChildren"));
     for (auto& child : _children)
     {
         child = input.readObject<Node>("Child");

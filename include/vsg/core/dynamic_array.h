@@ -12,12 +12,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 </editor-fold> */
 
-#include <vsg/core/ref_ptr.h>
-
-#include <vsg/nodes/Node.h>
-
-#include <array>
-#include <vector>
+#include <vsg/core/Allocator.h>
 
 namespace vsg
 {
@@ -49,16 +44,35 @@ namespace vsg
             }
         }
 
+        explicit dynamic_array(Allocator* allocator, size_type size) : _size(size)
+        {
+            if (size>N)
+            {
+                _ptr = new T[size];
+            }
+            else
+            {
+                _ptr = _data;
+            }
+        }
+
         ~dynamic_array()
         {
             if (_size>N) delete [] _ptr;
         }
 
-        void clear()
+        void clear(Allocator* allocator=nullptr)
         {
             if (_size>N)
             {
-                delete [] _ptr;
+                if (allocator)
+                {
+                    allocator->deleteArray(_ptr, _size);
+                }
+                else
+                {
+                    delete [] _ptr;
+                }
                 _ptr = _data;
             }
             else destroy_range(_ptr, _ptr+_size);
@@ -90,6 +104,43 @@ namespace vsg
                 }
 
                 if (_size>N) delete [] _ptr;
+                else destroy_range(_ptr, _ptr+_size);
+
+                _ptr = new_ptr;
+                _size = new_size;
+            }
+            else
+            {
+                // destroy any trailing that are no longer required
+                if (new_size<_size)
+                {
+                    destroy_range(_ptr+new_size, _ptr+_size);
+                }
+                _size = new_size;
+            }
+        }
+
+        void resize(Allocator* allocator, size_type new_size)
+        {
+            if (_size==new_size) return;
+
+            T* new_ptr = new_size>N ? allocator->newArray<T>(new_size) : _data;
+
+            if (new_ptr != _ptr)
+            {
+                size_type min_size = std::min(new_size, _size);
+
+                T* original_s = _ptr;
+                T* original_e = _ptr+min_size;
+                T* new_s = new_ptr;
+
+                // need to look at utlizing std::move.
+                for(;original_s<original_e; ++original_s, ++new_s)
+                {
+                    (*new_s) = (*original_s);
+                }
+
+                if (_size>N) allocator->deleteArray(_ptr, _size);
                 else destroy_range(_ptr, _ptr+_size);
 
                 _ptr = new_ptr;

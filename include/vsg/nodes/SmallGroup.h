@@ -23,10 +23,6 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 namespace vsg
 {
 
-    class SmallGroup;
-
-    VSG_type_name(vsg::SmallGroup);
-
     class VSG_DECLSPEC SmallGroup : public Inherit<Node, SmallGroup>
     {
     public:
@@ -34,6 +30,7 @@ namespace vsg
         using size_type = Children::size_type;
 
         SmallGroup(size_type size = 0);
+        SmallGroup(Allocator* allocator, size_type size = 0);
 
         template<class N, class V>
         static void t_traverse(N& node, V& visitor)
@@ -49,7 +46,7 @@ namespace vsg
         void read(Input& input) override;
         void write(Output& output) const override;
 
-        void resize(size_type size) { _children.resize(size); }
+        void resize(size_type size);
 
         void setChild(size_type pos, vsg::Node* node) { _children[pos] = node; }
         vsg::Node* getChild(size_type pos) { return _children[pos].get(); }
@@ -65,5 +62,7 @@ namespace vsg
 
         Children _children;
     };
+
+    VSG_type_name(vsg::SmallGroup);
 
 } // namespace vsg
