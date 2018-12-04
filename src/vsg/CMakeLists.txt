@@ -24,6 +24,7 @@ set(SOURCES
     nodes/Group.cpp
     nodes/Node.cpp
     nodes/QuadGroup.cpp
+    nodes/SmallGroup.cpp
     nodes/StateGroup.cpp
 
 
