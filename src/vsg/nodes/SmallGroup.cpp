@@ -19,7 +19,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 using namespace vsg;
 
-SmallGroup::SmallGroup(size_t size) :
+SmallGroup::SmallGroup(size_type size) :
     _children(size)
 {
 }

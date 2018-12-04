@@ -50,7 +50,11 @@ namespace vsg
 
         ~ref_ptr()
         {
-            if (_ptr) _ptr->unref();
+            if (_ptr)
+            {
+                _ptr->unref();
+                _ptr = nullptr;
+            }
         }
 
         ref_ptr& operator=(T* ptr) noexcept

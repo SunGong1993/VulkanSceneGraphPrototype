@@ -30,7 +30,10 @@ namespace vsg
     class VSG_DECLSPEC SmallGroup : public Inherit<Node, SmallGroup>
     {
     public:
-        SmallGroup(size_t size = 0);
+        using Children = dynamic_array<ref_ptr<Node>, 4>;
+        using size_type = Children::size_type;
+
+        SmallGroup(size_type size = 0);
 
         template<class N, class V>
         static void t_traverse(N& node, V& visitor)
@@ -46,15 +49,13 @@ namespace vsg
         void read(Input& input) override;
         void write(Output& output) const override;
 
-        void resize(uint32_t);
+        void resize(size_type size) { _children.resize(size); }
 
-        void setChild(std::size_t pos, vsg::Node* node) { _children[pos] = node; }
-        vsg::Node* getChild(std::size_t pos) { return _children[pos].get(); }
-        const vsg::Node* getChild(std::size_t pos) const { return _children[pos].get(); }
+        void setChild(size_type pos, vsg::Node* node) { _children[pos] = node; }
+        vsg::Node* getChild(size_type pos) { return _children[pos].get(); }
+        const vsg::Node* getChild(size_type pos) const { return _children[pos].get(); }
 
-        std::size_t getNumChildren() const noexcept { return _children.size(); }
-
-        using Children = dynamic_array<ref_ptr<Node>, 4>;
+        size_type getNumChildren() const noexcept { return _children.size(); }
 
         Children& getChildren() { return _children; }
         const Children& getChildren() const { return _children; }
