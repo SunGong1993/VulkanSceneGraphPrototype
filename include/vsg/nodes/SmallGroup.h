@@ -30,7 +30,7 @@ namespace vsg
         using value_type = T;
         using iterator = value_type*;
         using const_iterator = const value_type*;
-        using size_type = unsigned int;
+        using size_type = std::uint32_t;
 
         dynamic_array() :
             _size(0),
