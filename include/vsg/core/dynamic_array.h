@@ -44,11 +44,18 @@ namespace vsg
             }
         }
 
-        explicit dynamic_array(Allocator* allocator, size_type size) : _size(size)
+        dynamic_array(Allocator* allocator, size_type size) : _size(size)
         {
             if (size>N)
             {
-                _ptr = new T[size];
+                if (allocator)
+                {
+                    _ptr = allocator->newArray<T>(size);
+                }
+                else
+                {
+                    _ptr = new T[size];
+                }
             }
             else
             {

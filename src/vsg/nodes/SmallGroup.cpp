@@ -26,7 +26,7 @@ SmallGroup::SmallGroup(size_type size) :
 
 SmallGroup::SmallGroup(Allocator* allocator, size_type size) :
     Inherit(allocator),
-    _children(size)
+    _children(allocator, size)
 {
 }
 
