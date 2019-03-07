@@ -95,13 +95,13 @@ namespace vsg
         void read(Input& input) override
         {
             base_type::read(input);
-            input.read("Value", value());
+            input.read("Value", base_type::value());
         }
 
         void write(Output& output) const override
         {
             base_type::write(output);
-            output.write("Value", value());
+            output.write("Value", base_type::value());
         }
     };
 
