@@ -378,13 +378,6 @@ void Viewer::compile()
         uint32_t maxSets = collectStats.computeNumDescriptorSets();
         DescriptorPoolSizes descriptorPoolSizes = collectStats.computeDescriptorPoolSizes();
 
-#if 0
-        {
-            { VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER, maxDescriptors }, // type, descriptorCount // total descriptors of a type across all sets
-            { VK_DESCRIPTOR_TYPE_UNIFORM_BUFFER, maxDescriptors } // type, descriptorCount // total descriptors of a type across all sets
-        };
-#endif
-
         std::cout<<"maxSets = "<<maxSets<<std::endl;
         std::cout<<"    type\tcount"<<std::endl;
         for(auto& [type, count] : descriptorPoolSizes)
